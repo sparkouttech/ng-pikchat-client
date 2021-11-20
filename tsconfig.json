@@ -11,6 +11,12 @@
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
+    "paths": {
+      "ng-pikchat-client": [
+        "dist/ng-pikchat-client/ng-pikchat-client",
+        "dist/ng-pikchat-client"
+      ]
+    },
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
