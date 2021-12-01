@@ -11,14 +11,15 @@
         <div class="col-md-3">
           <div class="mb-3">
             <label for="connectUrl" class="form-label">Enter your URL</label>
-            <input type="text" class="form-control connect-form" value="http://localhost:3000" id="connectUrl" placeholder="">
+            <input type="text" [(ngModel)] = "connectUrl"  
+            class="form-control connect-form" id="connectUrl" placeholder="">
           </div>
         </div>
 
         <div class="col-md-3">
           <div class="mb-3">
             <label for="apiKey" class="form-label">Enter your Api key</label>
-            <input type="text" class="form-control connect-form" value="12345" id="apiKey" placeholder="">
+            <input type="text" [(ngModel)] = "apiKey" class="form-control connect-form" value="12345" id="apiKey" placeholder="">
           </div>
           
         </div>
@@ -26,27 +27,27 @@
         <div class="col-md-3">
           <div class="mb-3">
             <label for="sessionId" class="form-label">Enter your sessionId</label>
-            <input type="text" class="form-control connect-form" value="b5e44e31-33d3-467e-8b2f-236d0fad615b" id="sessionId" placeholder="">
+            <input type="text" [(ngModel)] = "sessionId" class="form-control connect-form" value="b5e44e31-33d3-467e-8b2f-236d0fad615b" id="sessionId" placeholder="">
           </div>
         </div>
 
         <div class="col-md-3">
           <div class="mb-3">
             <label for="userId" class="form-label">Enter your userId</label>
-            <input type="text" class="form-control connect-form" value="b5e44e31-33d3-467e-8b2f-236d0fad615b" id="userId" placeholder="">
+            <input type="text" [(ngModel)] = "userId" class="form-control connect-form" value="b5e44e31-33d3-467e-8b2f-236d0fad615b" id="userId" placeholder="">
           </div>
         </div>
 
         <div class="col-md-3">
           <div class="mb-3">
             <label for="accessToken" class="form-label">Enter your accessToken</label>
-            <input type="text" class="form-control connect-form" value="b5e44e31-33d3-467e-8b2f-236d0fad615b" id="accessToken" placeholder="">
+            <input type="text" [(ngModel)] = "accessToken" class="form-control connect-form" value="b5e44e31-33d3-467e-8b2f-236d0fad615b" id="accessToken" placeholder="">
           </div>
         </div>
 
         <div class="col-md-9">
-          <button *ngIf="!connected" type="button" style="margin-top: 2%;float: right;" id="connect" class="btn btn-primary">Connect</button>
-          <button *ngIf="connected" type="button" style="margin-top: 2%;float: right;" id="disconnect" class="btn btn-danger">Disconnect</button>
+          <button *ngIf="!connected" type="button" style="margin-top: 2%;float: right;" (click)="connect()" id="connect" class="btn btn-primary">Connect</button>
+          <button *ngIf="connected" type="button" style="margin-top: 2%;float: right;" (click)="disconnect()" id="disconnect" class="btn btn-danger">Disconnect</button>
         </div>
         
       </div>
@@ -56,19 +57,23 @@
   </div>
 
 
-  <div class="col-md-12 mt-5">
+  <div class="col-md-12 mt-5" *ngIf="connected">
     <div class="row">
 
       <div class="col-md-4">
         <div class="card">
+          
           <div class="card-body">
 
             <div *ngFor="let onlineUser of onlineUsers" class="card mt-2" style="cursor: pointer;">
-              <div class="card-header">
-                <a href=#>{{onlineUser.userId}}</a>
+              <div class="card-header" (click)="setActiveChatScreenUser(onlineUser?.userId)">
+                <a href=#>{{onlineUser?.userId}}</a>
               </div>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item">{{onlineUser.isOnline}}</li>
+              <ul class="list-group list-group-flush" (click)="setActiveChatScreenUser(onlineUser?.userId)">
+                <li class="list-group-item" *ngIf="onlineUser?.isOnline == 'true'">Online</li>
+                <li class="list-group-item" *ngIf="onlineUser?.isOnline == 'false'">
+                  {{onlineUser?.lastOnlineAt | amFromUtc | amTimeAgo }}
+                </li>
               </ul>
             </div>
 
@@ -77,28 +82,35 @@
       </div>
 
       <div class="col-md-8">
-        <div class="card">
-          <div class="card-body">
+        <div class="card" *ngIf="activeChatScreenUser != ''">
+          <div class="card-header">
+            <p>{{ activeChatScreenUser }}</p>
+          </div>
+          <div class="card-body" style="    max-height: 500px;
+          overflow: auto;">
 
-            <div class="card mt-1">
+            <div class="card mt-1" *ngFor="let chatMessage of chatMessages">
               <div class="card-header">
-                <p>:) Hello. How are you today?</p>
+                <p [ngClass]="chatMessage.senderId == userId ? 'float-right' : ''" >{{chatMessage?.message}}</p>
               </div>
             </div>
 
-            <div class="card mt-1">
-              <div class="card-header">
-                <p class="float-right">Hello. How are you today? (:</p>
-              </div>
-            </div>
 
             <div class="form-group mt-5">
-              <textarea type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter message"></textarea>
+              <textarea type="text" [(ngModel)]="textMessage" class="form-control" id="exampleInputEmail1" placeholder="Enter message"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary mt-3 float-right">send</button>
+            <button type="submit" (click)="sendMessage()" class="btn btn-primary mt-3 float-right">send</button>
 
           </div>
+
         </div>
+
+        <div *ngIf="activeChatScreenUser == ''">
+          <div>
+            <h5>Select a chat from left to start messaging</h5>
+          </div>
+        </div>
+
       </div>
 
     </div>

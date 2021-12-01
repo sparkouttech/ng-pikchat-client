@@ -6,6 +6,10 @@ import { AppComponent } from './app.component';
 
 import { NgPikchatClientModule } from "ng-pikchat-client";
 
+import {FormsModule} from '@angular/forms';    
+
+import { MomentModule } from 'ngx-moment';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -13,7 +17,9 @@ import { NgPikchatClientModule } from "ng-pikchat-client";
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgPikchatClientModule
+    NgPikchatClientModule,
+    FormsModule,
+    MomentModule
   ],
   providers: [],
   bootstrap: [AppComponent]
