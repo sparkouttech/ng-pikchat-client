@@ -3,5 +3,9 @@
   "dest": "../../dist/ng-pikchat-client",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "tslib",
+    "socket.io-client"
+  ]
 }
